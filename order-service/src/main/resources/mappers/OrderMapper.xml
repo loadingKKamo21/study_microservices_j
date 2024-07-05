@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.programmingtechie.orderservice.repositories.mybatis.OrderMapper">
+    
+    <resultMap id="OrderResultMap" type="Order">
+        <id column="order_id" property="id"/>
+        <result column="order_number" property="orderNumber"/>
+        <collection property="orderLineItemsIdList" ofType="java.lang.Long">
+            <id column="order_line_items_id"/>
+        </collection>
+    </resultMap>
+    
+    <sql id="orderColumns">
+        tbl_orders.order_id AS id, order_number, order_line_items_id
+    </sql>
+    
+    <insert id="save" useGeneratedKeys="true" keyColumn="order_id" keyProperty="id">
+        INSERT INTO tbl_orders(order_number)
+        VALUES (#{orderNumber});
+    </insert>
+    
+    <select id="findById" resultType="Order">
+        SELECT <include refid="orderColumns"/>
+        FROM tbl_orders
+        LEFT JOIN tbl_order_line_items ON tbl_orders.order_id = tbl_order_line_items.order_id
+        WHERE tbl_orders.order_id = #{id}
+        GROUP BY tbl_orders.order_id;
+    </select>
+    
+    <select id="findAll" resultType="Order">
+        SELECT <include refid="orderColumns"/>
+        FROM tbl_orders
+        LEFT JOIN tbl_order_line_items ON tbl_orders.order_id = tbl_order_line_items.order_id
+        GROUP BY tbl_orders.order_id;
+    </select>
+    
+    <delete id="deleteById">
+        DELETE
+        FROM tbl_orders
+        WHERE order_id = #{id};
+    </delete>
+
+</mapper>

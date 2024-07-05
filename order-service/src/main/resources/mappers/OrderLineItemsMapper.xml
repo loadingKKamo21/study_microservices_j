@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.programmingtechie.orderservice.repositories.mybatis.OrderLineItemsMapper">
+    
+    <sql id="orderLineItemsColumns">
+        order_line_items_id AS id, order_id, sku_code, price, quantity
+    </sql>
+    
+    <insert id="save" useGeneratedKeys="true" keyColumn="order_line_items_id" keyProperty="id">
+        INSERT INTO tbl_order_line_items(order_id, sku_code, price, quantity)
+        VALUES (#{orderId}, #{skuCode}, #{price}, #{quantity});
+    </insert>
+    
+    <insert id="saveAll" useGeneratedKeys="true" keyColumn="order_line_items_id" keyProperty="id">
+        INSERT INTO tbl_order_line_items(order_id, sku_code, price, quantity)
+        VALUES
+        <foreach collection="params" item="param" separator=",">
+            (#{param.orderId}, #{param.skuCode}, #{param.price}, #{param.quantity})
+        </foreach>
+        ;
+    </insert>
+    
+    <select id="findById" resultType="OrderLineItems">
+        SELECT <include refid="orderLineItemsColumns"/>
+        FROM tbl_order_line_items
+        WHERE order_line_items_id = #{id};
+    </select>
+    
+    <select id="findAll" resultType="OrderLineItems">
+        SELECT <include refid="orderLineItemsColumns"/>
+        FROM tbl_order_line_items;
+    </select>
+    
+    <select id="findAllByIds" resultType="OrderLineItems">
+        SELECT <include refid="orderLineItemsColumns"/>
+        FROM tbl_order_line_items
+        WHERE order_line_items_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ;
+    </select>
+    
+    <delete id="deleteById">
+        DELETE
+        FROM tbl_order_line_items
+        WHERE order_line_items_id = #{id};
+    </delete>
+    
+    <delete id="deleteAllByIds">
+        DELETE
+        FROM tbl_order_line_items
+        WHERE order_line_items_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ;
+    </delete>
+
+</mapper>

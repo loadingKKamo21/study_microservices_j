@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.programmingtechie.productservice.repositories.mybatis.ProductMapper">
+    
+    <sql id="productColumns">
+        product_id AS id, name, description, price
+    </sql>
+    
+    <insert id="save" useGeneratedKeys="true" keyColumn="product_id" keyProperty="id">
+        INSERT INTO tbl_products(name, description, price)
+        VALUES (#{name}, #{description}, #{price});
+    </insert>
+    
+    <select id="findById" resultType="Product">
+        SELECT <include refid="productColumns"/>
+        FROM tbl_products
+        WHERE product_id = #{id};
+    </select>
+    
+    <select id="findAll" resultType="Product">
+        SELECT <include refid="productColumns"/>
+        FROM tbl_products;
+    </select>
+    
+    <delete id="deleteById">
+        DELETE
+        FROM tbl_products
+        WHERE product_id = #{id};
+    </delete>
+
+</mapper>

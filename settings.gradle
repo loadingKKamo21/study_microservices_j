@@ -1,0 +1,6 @@
+rootProject.name = 'microservices'
+
+['product-service', 'order-service', 'inventory-service', 'discovery-server', 'api-gateway'].forEach(module -> {
+    include(module)
+    project(":$module").projectDir = file("$rootDir/$module")
+})
